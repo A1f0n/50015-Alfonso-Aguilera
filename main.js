@@ -1,80 +1,87 @@
-//clase product manager 
+const fs = require('fs').promises;
 
+//clase product manager 
 class ProductManager {
     
-    constructor() {
-        this.products = [];
+    constructor(productPath) {
+        this.productPath = productPath;
+        
+        // Creo archivo con ruta proporcionada
+        fs.access(productPath)
+            .then(() => {
+                console.log('Existia un archivo asi');
+            })
+            .catch(() => {
+                // El archivo no existe, así que intenta crearlo
+                return fs.writeFile(productPath, '[]', 'utf-8');
+            })
+            .then(() => {
+                console.log('Product Manager inicializado');
+            })
+            .catch((error) => {
+                console.error('Error al inicializar el Product Manager:', error);
+            });
+        }
+
+    getProducts = async() => {
+        try{
+    
+        //leer archivo y devolver los productos en un array
+        let jsonProducts = await fs.readFile(this.productPath, 'utf-8');
+        let arrayProductos = JSON.parse(jsonProducts);
+        return arrayProductos
+        } catch(error) {
+            console.error('Error al leer el archivo:', error); 
+        }
+
+    }
+
+    addProduct = async (title, description, price, thumbnail, code, stock) => {
+        try {
+            // Leer productos en archivo
+            let arrayProductos = await this.getProducts();
+    
+            // Crear objeto producto
+            const nuevoProducto = {
+                title,
+                description,
+                price,
+                thumbnail,
+                code,
+                stock
+            };
+    
+            // Agregar producto recibido al array
+            arrayProductos.push(nuevoProducto);
+    
+            // Pasar a JSON
+            let jsonDeProductos = JSON.stringify(arrayProductos, null, 2);
+    
+            // Escribir productos en archivo
+            await fs.writeFile(this.productPath, jsonDeProductos, 'utf-8');
+    
+            console.log('Producto agregado correctamente.');
+        } catch (error) {
+            console.error('Error al agregar el producto:', error);
+        }
     }
     
-    static Product = class {
-    static id = 0;
-
-        constructor(title, description, price, thumbnail, code, stock){
-            this.id = ++ProductManager.Product.id;
-            this.title = title;
-            this.description = description;
-            this.price = price;
-            this.thumbnail = thumbnail;
-            this.code = code;
-            this.stock = stock;
-        }
-    }
-    
-    addProduct(title, description, price, thumbnail, code, stock){
-
-        //verificamos que todos los parámetros sean proporcionados
-        if (arguments.length < 6) {
-            throw new Error('Todos los parámetros son obligatorios');
-        }
-
-        if (this.products.some(product => product.code === code)) {
-            throw new Error('Ya existe un producto con el código: ' + code);
-          }
-
-        //creamos nuevo objeto producto y lo insertamos en el array. El constructor crea un id autoincremental
-        const nuevoProducto = new ProductManager.Product(title, description, price, thumbnail, code, stock);
-
-        this.products.push(nuevoProducto)
-
-    }
-
-    getProducts(propiedadesProducto){
-        // devuelve un arreglo con todos los productos creados hasta el momento
-        console.log(this.products)
-
-    }
-
-    // Función para buscar un producto por el id
-    getProductsByID(id){
-        // Utilizamos find para encontrar el primer elemento que cumple la condición
-        const productoEncontrado = this.products.find(producto => producto.id === id);
-  
-        if (productoEncontrado) {
-        console.log('Producto encontrado:', productoEncontrado);
-        } else {
-        console.error('Not found');
-        }
-    }
 
 
 }
 
 
-//testing 
-const manager = new ProductManager
 
-//testing get products
-manager.getProducts()
+//const manager = new ProductManager("ruta_testing2.json");
 
-//add products
-manager.addProduct('producto prueba', 'Este es un producto prueba', 200, 'sin imagen', 'abc123', 25)
 
-manager.addProduct('testing 2', 'Este es un producto prueba', 250, 'sin imagen', 'abc124', 25)
+//manager.addProduct("testing_titulo", "descrip", "234", "http:lalala", 123, 34);
 
-manager.addProduct('testing 3', 'Este es un producto prueba', 300, 'sin imagen', 'abc125', 25)
+//console.log("El contenido del json es: n/" + manager.getProducts());
 
-//testing get products
-manager.getProducts()
 
-//testesar getID
-manager.getProductsByID(1)
+
+//manager.addProduct("testing2", "description", "price", "thumbnail", "code", "sdsd");
+//manager.addProduct("testing3", "description", "price", "thumbnail", "code", "sdsd");
+//manager.addProduct("testing4", "description", "price", "thumbnail", "code", "sdsd");
+//manager.addProduct("testing5", "description", "price", "thumbnail", "code", "sdsd");
