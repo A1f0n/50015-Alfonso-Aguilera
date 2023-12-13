@@ -1,87 +1,137 @@
-const fs = require('fs').promises;
+const fs = require("fs").promises;
 
-//clase product manager 
 class ProductManager {
-    
-    constructor(productPath) {
-        this.productPath = productPath;
-        
-        // Creo archivo con ruta proporcionada
-        fs.access(productPath)
-            .then(() => {
-                console.log('Existia un archivo asi');
-            })
-            .catch(() => {
-                // El archivo no existe, así que intenta crearlo
-                return fs.writeFile(productPath, '[]', 'utf-8');
-            })
-            .then(() => {
-                console.log('Product Manager inicializado');
-            })
-            .catch((error) => {
-                console.error('Error al inicializar el Product Manager:', error);
-            });
-        }
+    static ultId = 0;
 
-    getProducts = async() => {
-        try{
-    
-        //leer archivo y devolver los productos en un array
-        let jsonProducts = await fs.readFile(this.productPath, 'utf-8');
-        let arrayProductos = JSON.parse(jsonProducts);
-        return arrayProductos
-        } catch(error) {
-            console.error('Error al leer el archivo:', error); 
-        }
-
+    constructor(path) {
+        this.products = [];
+        this.path = path;
     }
 
-    addProduct = async (title, description, price, thumbnail, code, stock) => {
+    // Agrega productos
+    async addProduct(nuevoObjeto) {
+        let { title, description, price, img, code, stock } = nuevoObjeto;
+
+        if (!title || !description || !price || !img || !code || !stock) {
+            console.log("Todos los campos son obligatorios");
+            return;
+        }
+
+        if (this.products.some(item => item.code == code)) {
+            console.log("El código debe ser único");
+            return;
+        }
+
+        const newProduct = {
+            id: ++ProductManager.ultId,
+            title,
+            description,
+            price,
+            img,
+            code,
+            stock
+        };
+
+        this.products.push(newProduct);
+
+        await this.guardarArchivo(this.products);
+    }
+
+    async getProductById(id) {
         try {
-            // Leer productos en archivo
-            let arrayProductos = await this.getProducts();
-    
-            // Crear objeto producto
-            const nuevoProducto = {
-                title,
-                description,
-                price,
-                thumbnail,
-                code,
-                stock
-            };
-    
-            // Agregar producto recibido al array
-            arrayProductos.push(nuevoProducto);
-    
-            // Pasar a JSON
-            let jsonDeProductos = JSON.stringify(arrayProductos, null, 2);
-    
-            // Escribir productos en archivo
-            await fs.writeFile(this.productPath, jsonDeProductos, 'utf-8');
-    
-            console.log('Producto agregado correctamente.');
+            const arrayProductos = await this.getProducts();
+            const buscado = arrayProductos.find(item => item.id === id);
+
+            if (!buscado) {
+                console.log("Producto no encontrado");
+            } else {
+                console.log("Sí, lo encontramos!");
+                return buscado;
+            }
         } catch (error) {
-            console.error('Error al agregar el producto:', error);
+            console.log("Error al leer el archivo ", error);
         }
     }
-    
 
+    getProducts = async () => {
+        try {
+            // Leer archivo y devolver los productos en un array
+            let jsonProducts = await fs.readFile(this.path, 'utf-8');
+            let arrayProductos = JSON.parse(jsonProducts);
+            return arrayProductos;
+        } catch (error) {
+            console.error('Error al leer el archivo:', error);
+            return []; 
+        }
+    }
 
+    async guardarArchivo(arrayProductos) {
+        try {
+            await fs.writeFile(this.path, JSON.stringify(arrayProductos, null, 2));
+        } catch (error) {
+            console.log("Error al guardar el archivo", error);
+        }
+    }
+
+    // Actualizamos algún producto:
+    async updateProduct(id, productoActualizado) {
+        try {
+            const arrayProductos = await this.getProducts();
+
+            const index = arrayProductos.findIndex(item => item.id === id);
+
+            if (index !== -1) {
+                arrayProductos.splice(index, 1, productoActualizado);
+                await this.guardarArchivo(arrayProductos);
+            } else {
+                console.log("No se encontró el producto");
+            }
+
+        } catch (error) {
+            console.log("Error al actualizar el producto", error);
+        }
+    }
+
+    async deleteProduct(id) {
+try{
+    const arrayProdcutos = await this.getProducts();
+    const nuevoArray = arrayProductos.filter(item => item.id !== id);
+    await this.guardarArchivo(nuevoArray);
+}catch(error){
+
+    console.log("error al eliminar producto", error);
 }
 
+    }
+}
 
+// Testing:
 
-//const manager = new ProductManager("ruta_testing2.json");
+const manager = new ProductManager("./productos.json");
 
+const producto1 = {
+    title: "producto1",
+    description: "los mas ricos",
+    price: 150,
+    img: "sin imagen",
+    code: "1143",
+    stock: 30
+}
 
-//manager.addProduct("testing_titulo", "descrip", "234", "http:lalala", 123, 34);
+const producto2 = {
+    title: "producto2",
+    description: "los mas ricos",
+    price: 150,
+    img: "imagen.link",
+    code: "11433",
+    stock: 30
+}
 
-//console.log("El contenido del json es: n/" + manager.getProducts());
+//manager.addProduct(producto1);
 
+//testeamos con un código nuevo
+//manager.addProduct(producto2);
 
+//buscarporID
+manager.getProductById("11433")
 
-//manager.addProduct("testing2", "description", "price", "thumbnail", "code", "sdsd");
-//manager.addProduct("testing3", "description", "price", "thumbnail", "code", "sdsd");
-//manager.addProduct("testing4", "description", "price", "thumbnail", "code", "sdsd");
-//manager.addProduct("testing5", "description", "price", "thumbnail", "code", "sdsd");
