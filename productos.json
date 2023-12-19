@@ -5,7 +5,7 @@
     "description": "los mas ricos",
     "price": 150,
     "img": "sin imagen",
-    "code": "1143",
+    "code": 1143,
     "stock": 30
   },
   {
@@ -14,7 +14,25 @@
     "description": "los mas ricos",
     "price": 150,
     "img": "imagen.link",
-    "code": "11433",
+    "code": 11433,
+    "stock": 30
+  },
+  {
+    "id": 3,
+    "title": "producto3",
+    "description": "barato y dulce",
+    "price": 150,
+    "img": "imagen.link",
+    "code": 11434,
+    "stock": 34
+  },
+  {
+    "id": 4,
+    "title": "producto4",
+    "description": "Otro producto",
+    "price": 150,
+    "img": "imagen.link",
+    "code": 11423,
     "stock": 30
   }
 ]
