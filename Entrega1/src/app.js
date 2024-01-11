@@ -19,10 +19,6 @@ app.use("/api/carts", cartsRouter);
 
 app.listen(PUERTO, async () => {
     try {
-        //const manager = await new ProductManager("src/models/productos.json");
-        // Esperar a que se resuelva la promesa antes de mostrar los productos
-        //let productos = await manager.getProducts();
-        //console.log(productos);
         console.log(`Escuchando en el http://localhost:${PUERTO}`);
     } catch (error) {
         console.error("Error al obtener productos:", error);

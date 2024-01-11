@@ -20,5 +20,38 @@
     "category": "deporte",
     "thumbnails": [],
     "status": true
+  },
+  {
+    "id": 3,
+    "title": "arrroz",
+    "description": "barato",
+    "code": "56",
+    "price": 150,
+    "stock": 30,
+    "category": "comida",
+    "thumbnails": [],
+    "status": true
+  },
+  {
+    "id": 4,
+    "title": "polenta",
+    "description": "barato",
+    "code": "57",
+    "price": 150,
+    "stock": 30,
+    "category": "comida",
+    "thumbnails": [],
+    "status": true
+  },
+  {
+    "id": 5,
+    "title": "agua",
+    "description": "barato",
+    "code": "58",
+    "price": 150,
+    "stock": 30,
+    "category": "comida",
+    "thumbnails": [],
+    "status": true
   }
 ]
