@@ -1,0 +1,35 @@
+[
+  {
+    "id": 2,
+    "title": "producto66",
+    "description": "los mas ricos",
+    "code": "55",
+    "price": 150,
+    "stock": 30,
+    "category": "deporte",
+    "thumbnails": [],
+    "status": true
+  },
+  {
+    "id": 3,
+    "title": "arrroz",
+    "description": "barato",
+    "code": "56",
+    "price": 150,
+    "stock": 30,
+    "category": "comida",
+    "thumbnails": [],
+    "status": true
+  },
+  {
+    "id": 4,
+    "title": "polenta",
+    "description": "barato",
+    "code": "57",
+    "price": 150,
+    "stock": 30,
+    "category": "comida",
+    "thumbnails": [],
+    "status": true
+  }
+]
