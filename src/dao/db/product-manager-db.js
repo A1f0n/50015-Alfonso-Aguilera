@@ -38,14 +38,20 @@ class ProductManager {
         }
     }
 
-    async getProducts() {
+    
+    async getProducts({ limit, page, sort, query }) {
         try {
-            const productos = await ProductModel.find();
+            const productos = await ProductModel.find(query)
+                .sort(sort)
+                .skip((page - 1) * limit)
+                .limit(limit);
             return productos;
         } catch (error) {
             console.log("Error al obtener los productos", error);
+            throw error;
         }
     }
+    
 
     async getProductById(id) {
         try {

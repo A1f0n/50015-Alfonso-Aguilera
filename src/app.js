@@ -29,7 +29,7 @@ const httpServer = app.listen(PUERTO, () => {
     console.log(`Servidor escuchando en el puerto ${PUERTO}`);
 });
 
-//Desafio loco del chat en el ecommerce: 
+//Desafio del chat en el ecommerce: 
 const MessageModel = require("./dao/models/message.model.js");
 const io = new socket.Server(httpServer);
 

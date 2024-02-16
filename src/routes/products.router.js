@@ -5,17 +5,33 @@ const ProductManager = require("../dao/db/product-manager-db.js");
 const productManager = new ProductManager();
 
 router.get("/", async (req, res) => {
+    const { limit = 10, page = 1, sort, query } = req.query;
+    const options = {
+        limit: parseInt(limit),
+        page: parseInt(page),
+        sort: sort ? { price: sort === 'asc' ? 1 : -1 } : {},
+        query: query || {}
+    };
+
     try {
-        const limit = req.query.limit;
-        const productos = await productManager.getProducts();
-        if (limit) {
-            res.json(productos.slice(0, limit));
-        } else {
-            res.json(productos);
-        }
+        const result = await productManager.getProducts(options);
+        // Aquí deberás calcular totalPages, prevPage, nextPage, etc., basado en la información que te devuelva MongoDB.
+        res.json({
+            status: 'success',
+            payload: result.docs,
+            totalPages: result.totalPages,
+            prevPage: result.prevPage,
+            nextPage: result.nextPage,
+            page: result.page,
+            hasPrevPage: result.hasPrevPage,
+            hasNextPage: result.hasNextPage,
+            prevLink: result.prevPage ? `/path/to/products?page=${result.prevPage}` : null,
+            nextLink: result.nextPage ? `/path/to/products?page=${result.nextPage}` : null
+        });
     } catch (error) {
         console.error("Error al obtener productos", error);
         res.status(500).json({
+            status: 'error',
             error: "Error interno del servidor"
         });
     }
