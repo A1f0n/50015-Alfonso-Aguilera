@@ -9,7 +9,7 @@ const cartManager = new CartManager();
 router.get("/login", (req, res) => {
    // Verifica si el usuario ya está logueado y redirige a la página de perfil si es así
    if (req.session.login) {
-       return res.redirect("/profile");
+       return res.redirect("/products");
    }
 
    res.render("login");
@@ -19,7 +19,7 @@ router.get("/login", (req, res) => {
 router.get("/register", (req, res) => {
    // Verifica si el usuario ya está logueado y redirige a la página de perfil si es así
    if (req.session.login) {
-       return res.redirect("/profile");
+       return res.redirect("/products");
    }
    res.render("register");
 });
@@ -51,6 +51,7 @@ router.get("/products", async (req, res) => {
       });
 
       res.render("products", {
+         user: req.session.user,
          productos: nuevoArray,
          hasPrevPage: productos.hasPrevPage,
          hasNextPage: productos.hasNextPage,
