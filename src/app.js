@@ -60,4 +60,3 @@ app.get("/login", (req, res) => {
 app.listen(PUERTO, () => {
     console.log(`Servidor escuchando en el puerto ${PUERTO}`);
 });
-

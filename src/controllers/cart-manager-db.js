@@ -7,7 +7,7 @@ class CartManager {
             await nuevoCarrito.save();
             return nuevoCarrito;
         } catch (error) {
-            console.log("Error al crear el nuevo carrinho de compriñas");
+            console.log("Error al crear el nuevo carrito");
         }
     }
 
@@ -21,7 +21,7 @@ class CartManager {
 
             return carrito;
         } catch (error) {
-            console.log("Error al traer el carrito, fijate bien lo que haces", error);
+            console.log("Error al traer el carrito", error);
         }
     }
 
@@ -36,7 +36,6 @@ class CartManager {
                 carrito.products.push({ product: productId, quantity });
             }
 
-            //Vamos a marcar la propiedad "products" como modificada antes de guardar: 
             carrito.markModified("products");
 
             await carrito.save();
@@ -55,7 +54,6 @@ class CartManager {
                 throw new Error('Carrito no encontrado');
             }
 
-            //cart.products = cart.products.filter(item => item.product.toString() !== productId);
             cart.products = cart.products.filter(item => item.product._id.toString() !== productId);
 
             await cart.save();
